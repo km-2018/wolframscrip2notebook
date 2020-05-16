@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import sys
+
 escape_sequences = [r"\:\\", "\n:\\n", '":\\"']
 escape_sequences = [s.split(":") for s in escape_sequences]
 
@@ -9,7 +11,10 @@ def parseComment(source):
     for line in lines:
         if not line:
             continue
-        if line.startswith("##"):
+        if line.startswith("###"):
+            line = line[3:].strip()
+            type = "Subsubsection"
+        elif line.startswith("##"):
             line = line[2:].strip()
             type = "Section"
         elif line.startswith("#"):
@@ -59,7 +64,9 @@ def cell2str(cell):
     type, line = cell
     type = toString(type)
     line = toString(line)
-    return "Cell[BoxData@RowBox@{" + line + "}," + type + "]"
+    if "Input" in type:
+        return "Cell[BoxData@RowBox@{" + line + "}," + type + "]"
+    return "Cell[" + line + "," + type + "]"
 
 
 code = open("input.wls").read()
