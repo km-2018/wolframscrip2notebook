@@ -69,8 +69,9 @@ def cell2str(cell):
     return "Cell[" + line + "," + type + "]"
 
 
-code = open("input.wls").read()
-cells = getCells(code)
-cells = [cell2str(cell) for cell in cells]
+cells = []
+for source in sys.argv[1:]:
+    code = open(source).read()
+    cells.extend(map(cell2str, getCells(code)))
 cells = "[{\n" + ",\n".join(cells) + "\n}]"
 print(f"Notebook{cells}")
